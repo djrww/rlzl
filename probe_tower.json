@@ -1,0 +1,9 @@
+[
+  {
+    "name": "tower_levels",
+    "max": 16,
+    "time": 4.0382513999938965,
+    "diag": "error: constant evaluation is taking a long time",
+    "note": "自我生成宏塔層數，規模 2^level"
+  }
+]

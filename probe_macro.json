@@ -1,0 +1,23 @@
+[
+  {
+    "name": "macro_tt_default",
+    "max": 126,
+    "time": 0.02433466911315918,
+    "diag": "error: recursion limit reached while expanding `$crate::welzl_count!`",
+    "note": "純 tt-munching，預設 recursion_limit=128"
+  },
+  {
+    "name": "macro_tt_1M",
+    "max": 14336,
+    "time": 32.67925000190735,
+    "diag": "error: rustc interrupted by SIGSEGV, printing backtrace",
+    "note": "recursion_limit 拉到 1e6"
+  },
+  {
+    "name": "macro_literal",
+    "max": 131072,
+    "time": 5.563722133636475,
+    "diag": "hit cap",
+    "note": "宏吐出 n 個點字面量 + 實跑 Welzl"
+  }
+]

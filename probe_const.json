@@ -1,0 +1,16 @@
+[
+  {
+    "name": "const_iter",
+    "max": 59392,
+    "time": 1.8050684928894043,
+    "diag": "error: constant evaluation is taking a long time",
+    "note": "迭代 Welzl，const-eval 規模"
+  },
+  {
+    "name": "const_rec",
+    "max": 120,
+    "time": 0.0326533317565918,
+    "diag": "error[E0080]: reached the configured maximum number of stack frames",
+    "note": "遞迴 Welzl，const-eval 深度"
+  }
+]
