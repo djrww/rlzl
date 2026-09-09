@@ -122,7 +122,7 @@ Session 7 起為**規劃**。
 
 > 三條路線互斥，資源不足以並行。決策點在 Session 7 結束時。
 
-## Phase 8A — 髒資料 3D 布爾 / mesh 修復 `【建議】`
+## Phase 8A — 髒資料 3D 布爾 / mesh 修復 `【建議・仍為首選】`
 
 **依據**：`manifold-rust` 已證明此方向可商品化（exact rational + mesh arrangement，
 Zhou/Grinspun/Zorin/Jacobson 2016；已出 NuGet/C# 綁定與 WASM）。
@@ -142,29 +142,27 @@ Zhou/Grinspun/Zorin/Jacobson 2016；已出 NuGet/C# 綁定與 WASM）。
 **風險**：需求真實但技術難度最高；精確算術在此是**必需品而非優化**
 （髒資料必然踩到退化組態，浮點方案根本算不出正確答案）—— 這既是機會也是門檻。
 
-## Phase 8B — True-shape nesting 引擎 `【變現最快】`
+## Phase 8B — ~~True-shape nesting 引擎~~ → **貢獻 jagua-rs 生態** `【已修訂 2026-09-09】`
 
-**依據**：NFP 的公開痛點就是數值魯棒性。文獻原話：
-「the orbital piece may lose contact with the edges of the stationary due to
-numerical precision errors」、「all state-of-the-art nesting algorithms rely on either
-NFPs or a raster... serious limitations regarding robustness and precision」
-（arXiv 2509.13329, EJOR 2025）。
+> **修訂原因**：原計畫「從零自建 nesting 引擎對打 sparrow」已**撤回**。
+> 查證原始碼後發現兩件事實（詳見 [`docs/ECOSYSTEM.md`](docs/ECOSYSTEM.md)）：
+>
+> 1. jagua-rs 生產謂詞用 **f32**，近共線誤判率實測 **9.96%**（49,820/500,000）。
+> 2. 但這個缺口**不需要 i128** —— 改用 f64 計算 f32 輸入，誤判降為 **0**，
+>    代價僅 **1.21×**。本專案的精確算術在此工況並非必需品。
+>
+> 從零對打一個 581 commits / 190 stars / 學術 SotA / 活躍維護的專案沒有勝算，
+> 且 nesting 難點主要在 NP-hard 組合最佳化而非幾何。
 
-**差異化角度**：目前最好的開源 CDE `jagua-rs` 自陳設計哲學是
-「always err on the side of caution」—— 兩物體極近時**寧可誤報碰撞**，
-這代表它會**漏掉完美嵌合（exact fit）的解**。精確判定可以不漏。
+| Task | 說明 | 狀態 |
+|---|---|---|
+| 8B.1 | 提交近共線 f32 誤判再現測試集（含 Cassini 構造） | 待辦 |
+| 8B.2 | 提交關鍵謂詞 f64 化 PR（誤判 0，成本 1.21×） | 待辦 |
+| 8B.3 | 文件化 f64 失效邊界：指數跨度 **2^53**（實測 100% 誤判） | 待辦 |
+| 8B.4 | exact-fit 精確後端（sparrow 論文自陳做不到） | 評估中 |
+| ~~8B.5~~ | ~~自建組合最佳化層 / DXF 匯入~~ | **撤回** |
 
-| Task | 說明 |
-|---|---|
-| 8B.1 | Minkowski sum / NFP 精確實作（複用 `boolops` + `segdist`） |
-| 8B.2 | 碰撞偵測引擎（空間索引 + 精確謂詞） |
-| 8B.3 | exact-fit 保證測試集 |
-| 8B.4 | 組合最佳化層（此為 NP-hard，非幾何問題） |
-| 8B.5 | DXF 匯入 / 排版輸出 |
-
-**風險（必須認清）**：nesting 的難點**主要是 NP-hard 組合最佳化，幾何只佔約 20%**。
-幾何魯棒性是差異化，不是護城河。且學術 SotA 剛開源（sparrow, 2025-09）並宣稱
-「outperforms SotA by an unexpectedly wide margin」，領域正在洗牌。
+**授權相容性**：jagua-rs 為 MPL-2.0（檔案級 copyleft，商業可用），接受外部 PR。
 
 ## Phase 8C — GPU / SIMD 批次精確謂詞
 
